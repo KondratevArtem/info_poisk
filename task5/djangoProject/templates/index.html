@@ -39,7 +39,7 @@
                 "Access-Control-Allow-Origin": "*"
             },
             timeout: 30000,
-            url: "http://localhost:8000/polls?search=" + document.getElementById('search').value,
+            url: "http://127.0.0.1:8000/polls?search=" + document.getElementById('search').value,
             type: 'GET',
             success: function (data) {
                 console.log('123')

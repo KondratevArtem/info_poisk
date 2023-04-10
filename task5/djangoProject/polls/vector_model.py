@@ -12,7 +12,7 @@ class VectorModel:
         self.matrix, self.index, self.lemmas = self.get_matrix()
 
     def load_index(self):
-        file = open('/Users/kamillahajrullina/PycharmProjects/itis/inverted_index.txt', 'r')
+        file = open('/Users/kondrartyom/Desktop/info_poisk/task5/djangoProject/inverted_index.txt', 'r')
         lines = file.readlines()
 
         index = dict()
@@ -25,9 +25,9 @@ class VectorModel:
         return lemmas, index
 
     def load_idf(self):
-        file = open('/Users/kamillahajrullina/PycharmProjects/itis/lemmas_idf.txt', 'r')
+        file = open('/Users/kondrartyom/Desktop/info_poisk/task5/djangoProject/lemmas_idf.txt', 'r')
         lines = file.readlines()
-
+        print(lines)
         idf = dict()
         for line in lines:
             line = line.replace('\n', '')
@@ -35,7 +35,7 @@ class VectorModel:
         return idf
 
     def load_tf_idf(self, i):
-        file = open("/Users/kamillahajrullina/PycharmProjects/itis/lemmas/страница " + str(i) + ".txt", "r")
+        file = open("/Users/kondrartyom/Desktop/info_poisk/task5/djangoProject/lemmas/страница " + str(i) + ".txt", "r")
         lines = file.readlines()
 
         tf_idf = dict()
@@ -53,7 +53,7 @@ class VectorModel:
             for lemma in tf_idf:
                 matrix[i - 1][lemmas.index(lemma)] = tf_idf[lemma]
 
-        matrix_file = open("/Users/kamillahajrullina/PycharmProjects/itis/matrix.txt", "a")
+        matrix_file = open("/Users/kondrartyom/Desktop/info_poisk/task5/djangoProject/matrix.txt", "a")
         for i in range(len(matrix)):
             for j in range(len(matrix[0])):
                 matrix_file.write(str(matrix[i][j]) + " ")
@@ -66,7 +66,7 @@ class VectorModel:
 
         matrix = np.zeros((217, len(index)))
 
-        file = open('/Users/kamillahajrullina/PycharmProjects/itis/matrix.txt', 'r')
+        file = open('/Users/kondrartyom/Desktop/info_poisk/task5/djangoProject/matrix.txt', 'r')
         lines = file.readlines()
 
         for i in range(len(lines)):
@@ -89,15 +89,14 @@ class VectorModel:
 
     def search(self, text):
         search_lemmas = self.get_lemmas(text.lower())
+        print(search_lemmas)
         idf = self.load_idf()
-
         words_frequency = collections.Counter(search_lemmas)
-
+        print(words_frequency)
         vector = np.zeros(len(self.index))
         for lemma in self.index:
             if lemma in search_lemmas:
                 vector[self.lemmas.index(lemma)] = (words_frequency[lemma] / float(len(self.index[lemma]))) * idf[lemma]
-
         texts = dict()
         for idx, row in enumerate(self.matrix):
             texts[idx + 1] = 1 - spatial.distance.cosine(vector, row)
@@ -106,10 +105,10 @@ class VectorModel:
         texts_filtered = dict(filter(lambda b: b[1] > 0, texts_sorted.items()))
         list = []
         for t in texts_filtered:
-            # print(t)
-            # print(text)
-            file = open('/Users/kamillahajrullina/PycharmProjects/itis/Выкачка/страница ' + str(t) + '.txt', 'r')
+            print(t)
+            print(text)
+            file = open('/Users/kondrartyom/Desktop/info_poisk/task5/djangoProject/Выкачка/страница ' + str(t) + '.txt', 'r')
             list.append(str(t) + ". " + (file.readlines()[0])[:100] + "...")
-            # list.append(t)
-            # print(text)
+            list.append(t)
+            print(text)
         return list

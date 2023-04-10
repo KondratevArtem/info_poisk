@@ -9,7 +9,7 @@ def index(request):
 
 def article(request):
     page = request.GET.get("article")
-    file = open('/Users/kamillahajrullina/PycharmProjects/itis/Выкачка/страница ' + page + '.txt', 'r')
+    file = open('/Users/kondrartyom/Desktop/info_poisk/task5/djangoProject/Выкачка/страница ' + page + '.txt', 'r')
     lines = file.readlines()
     text = ""
     for line in lines:
